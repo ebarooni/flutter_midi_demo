@@ -56,21 +56,13 @@ class _AvailableDevicesState extends State<AvailableDevices> {
                       ),
                     ),
                   ],
-                  rows: [
-                    DataRow(
-                      cells: [
-                        DataCell(Text((snapshot.data as List<MidiDevice?>)
-                            .elementAt(0)!
-                            .name)),
-                        DataCell(Text((snapshot.data as List<MidiDevice?>)
-                            .elementAt(0)!
-                            .id)),
-                        DataCell(Text((snapshot.data as List<MidiDevice?>)
-                            .elementAt(0)!
-                            .type)),
-                      ],
-                    ),
-                  ],
+                  rows: (snapshot.data as List<MidiDevice>).map((device) {
+                    return DataRow(cells: [
+                      DataCell(Text(device.name)),
+                      DataCell(Text(device.id)),
+                      DataCell(Text(device.type))
+                    ]);
+                  }).toList(),
                 );
               } else {
                 children = const Text('No info');
