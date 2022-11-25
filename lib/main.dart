@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'midi_controller/midi_controller.dart';
 
 void main() {
   runApp(const MyApp());
@@ -15,9 +16,7 @@ class MyApp extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Flutter Midi Demo'),
         ),
-        body: const Center(
-          child: Text('Hello Midi!'),
-        ),
+        body: const MidiController(),
       ),
     );
   }
