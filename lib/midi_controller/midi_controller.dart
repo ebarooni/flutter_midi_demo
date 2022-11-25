@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_midi_command/flutter_midi_command.dart';
+import 'available_devices.dart';
 import 'dart:io' show Platform;
 
 class MidiController extends StatefulWidget {
@@ -14,16 +14,14 @@ class _MidiControllerState extends State<MidiController> {
   Widget build(BuildContext context) {
     return Center(
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Text(
             Platform.operatingSystem,
             style: const TextStyle(fontSize: 48),
           ),
-          ElevatedButton(
-            onPressed: () => MidiCommand().devices.then((List<MidiDevice>? midiDevicesList) => print(midiDevicesList)),
-            child: const Text('Show available MIDI devices'),
-          ),
+          const AvailableDevices(),
         ],
       ),
     );
