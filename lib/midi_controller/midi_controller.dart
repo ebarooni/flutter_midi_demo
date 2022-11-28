@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'available_devices.dart';
+import 'available_devices/available_devices.dart';
+import 'package:flutter_midi_command/flutter_midi_command.dart';
 import 'dart:io' show Platform;
 
 class MidiController extends StatefulWidget {
@@ -10,6 +11,8 @@ class MidiController extends StatefulWidget {
 }
 
 class _MidiControllerState extends State<MidiController> {
+  Future<List<MidiDevice>?> _availableDevices = MidiCommand().devices;
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -21,9 +24,19 @@ class _MidiControllerState extends State<MidiController> {
             Platform.operatingSystem,
             style: const TextStyle(fontSize: 48),
           ),
-          const AvailableDevices(),
+          ElevatedButton(
+            onPressed: (() => checkForNewMidiDevices()),
+            child: const Text('Show available MIDI devices'),
+          ),
+          AvailableDevices(availableDevices: _availableDevices),
         ],
       ),
     );
+  }
+
+  void checkForNewMidiDevices() {
+    setState(() {
+      _availableDevices = MidiCommand().devices;
+    });
   }
 }
