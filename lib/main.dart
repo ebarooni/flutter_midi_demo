@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import './bottom_nav_bar/bottom_nav_bar.dart';
 import 'midi_controller/midi_controller.dart';
 
 void main() {
@@ -17,6 +18,7 @@ class MyApp extends StatelessWidget {
           title: const Text('Flutter Midi Demo'),
         ),
         body: const MidiController(),
+        bottomNavigationBar: const BottomNavBar(),
       ),
     );
   }
