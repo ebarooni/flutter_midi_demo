@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './bottom_nav_bar/bottom_nav_bar.dart';
-import 'midi_controller/midi_controller.dart';
+import './homepage/homepage.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,14 +12,21 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Midi Demo',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('Flutter Midi Demo'),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSwatch(
+          primarySwatch: Colors.amber,
+          primaryColorDark: Colors.purple,
         ),
-        body: const MidiController(),
-        bottomNavigationBar: const BottomNavBar(),
+        textTheme: GoogleFonts.firaCodeTextTheme(),
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
+          type: BottomNavigationBarType.fixed,
+          showUnselectedLabels: false,
+          selectedItemColor: Colors.black54,
+          elevation: 20.0,
+        ),
       ),
+      title: 'Flutter Midi Demo',
+      home: Homepage(),
     );
   }
 }
