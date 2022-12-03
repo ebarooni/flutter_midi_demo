@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
 class BottomNavBar extends StatefulWidget {
-  const BottomNavBar({Key? key}) : super(key: key);
+  const BottomNavBar({required this.updateView, Key? key}) : super(key: key);
+
+  final Function(int) updateView;
 
   @override
   State<BottomNavBar> createState() => _BottomNavBarState();
@@ -13,6 +15,7 @@ class _BottomNavBarState extends State<BottomNavBar> {
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
+      widget.updateView(_selectedIndex);
     });
   }
 

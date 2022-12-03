@@ -26,7 +26,7 @@ class MyApp extends StatelessWidget {
         ),
       ),
       title: 'Flutter Midi Demo',
-      home: Homepage(),
+      home: const Homepage(),
     );
   }
 }
