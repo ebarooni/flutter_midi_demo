@@ -16,6 +16,11 @@ class Settings extends StatelessWidget {
       subtitle: Text(Platform.localeName),
     ),
     const ListTile(
+      leading: Icon(Icons.tag),
+      title: Text('App Version'),
+      subtitle: Text('0.0.1'),
+    ),
+    const ListTile(
       leading: Icon(Icons.flutter_dash),
       title: Text('Flutter Version'),
       subtitle: Text('3.0.3'),
