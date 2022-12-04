@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_midi_command/flutter_midi_command.dart';
 
-class AvailableDevices extends StatelessWidget {
+class Devices extends StatelessWidget {
   final Future<List<MidiDevice>?> availableDevices;
 
-  const AvailableDevices({required this.availableDevices, Key? key})
+  const Devices({required this.availableDevices, Key? key})
       : super(key: key);
 
   @override

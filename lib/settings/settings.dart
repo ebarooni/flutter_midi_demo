@@ -2,22 +2,32 @@ import 'package:flutter/material.dart';
 import 'dart:io' show Platform;
 
 class Settings extends StatelessWidget {
-  const Settings({Key? key}) : super(key: key);
+  Settings({Key? key}) : super(key: key);
+
+  final List<Widget> settingItems = [
+    ListTile(
+      leading: const Icon(Icons.computer),
+      title: const Text('Operating System'),
+      subtitle: Text(Platform.operatingSystem),
+    ),
+    ListTile(
+      leading: const Icon(Icons.language),
+      title: const Text('System Locale'),
+      subtitle: Text(Platform.localeName),
+    ),
+    const ListTile(
+      leading: Icon(Icons.flutter_dash),
+      title: Text('Flutter Version'),
+      subtitle: Text('3.0.3'),
+    ),
+  ];
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-      shape: RoundedRectangleBorder(
-        side: BorderSide(
-          color: Theme.of(context).colorScheme.outline,
-        ),
-        borderRadius: const BorderRadius.all(Radius.circular(12)),
-      ),
-      child: ListTile(
-        leading: const Text('Operating System'),
-        trailing: Text(Platform.operatingSystem),
-      ),
+    return ListView.separated(
+      itemBuilder: ((context, index) => settingItems.elementAt(index)),
+      separatorBuilder: (context, index) => const Divider(),
+      itemCount: settingItems.length,
     );
   }
 }
