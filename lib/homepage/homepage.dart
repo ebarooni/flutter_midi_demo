@@ -13,9 +13,11 @@ class Homepage extends StatefulWidget {
 }
 
 class _HomepageState extends State<Homepage> {
-  int _currentTabIndex = 0;
-  Future<List<MidiDevice>?> _availableDevices = MidiCommand().devices;
+  final MidiCommand _midiCommand = MidiCommand();
+  late Future<List<MidiDevice>?> _availableDevices;
   late List<Widget> _tabs;
+  int _currentTabIndex = 0;
+  bool _didAskForBluetoothPermission = false;
 
   void _changeTabView(int changedTabIndex) {
     setState(() {
@@ -23,15 +25,53 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
-  void _refreshListOfMidiDevices() {
+  void _refreshListOfMidiDevices() async {
+    await _informUserAboutBluetoothPermissions(context);
+    if (_midiCommand.bluetoothState == BluetoothState.poweredOn) {
+      _midiCommand.startScanningForBluetoothDevices().catchError((err) {
+        print("Error $err");
+      });
+    } else {
+      await _midiCommand.startBluetoothCentral();
+      await _midiCommand.waitUntilBluetoothIsInitialized();
+    }
     setState(() {
-      _availableDevices = MidiCommand().devices;
+      _availableDevices = _midiCommand.devices;
     });
+  }
+
+  Future<void> _informUserAboutBluetoothPermissions(
+    BuildContext context,
+  ) async {
+    if (_didAskForBluetoothPermission) {
+      return;
+    } else {
+      await showDialog(
+          context: context,
+          barrierDismissible: false,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text(
+                  'Please grant bluetooth permissions to discover BLE MIDI devices'),
+              content: const Text(
+                  'Next dialog might ask you for bluetooth permissions. Please grant bluetooth permission to make bluetooth MIDI possible.'),
+              actions: [
+                TextButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Text('Close'),
+                )
+              ],
+            );
+          });
+      _didAskForBluetoothPermission = true;
+      return;
+    }
   }
 
   @override
   void initState() {
     super.initState();
+    _availableDevices = _midiCommand.devices;
     _tabs = [
       const MidiController(),
       Devices(availableDevices: _availableDevices),
