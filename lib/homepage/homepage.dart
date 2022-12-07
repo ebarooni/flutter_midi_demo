@@ -68,6 +68,16 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
+  Widget _updateAppBarTitle() {
+    if (_currentTabIndex == 0) {
+      return const Text('MIDI Messages Stream');
+    } else if (_currentTabIndex == 1) {
+      return const Text('Available MIDI Devices');
+    } else {
+      return const Text('Settings');
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -83,7 +93,7 @@ class _HomepageState extends State<Homepage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Flutter Midi Demo'),
+        title: _updateAppBarTitle(),
         centerTitle: false,
         leading: const FlutterLogo(
           style: FlutterLogoStyle.markOnly,
