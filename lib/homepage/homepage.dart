@@ -25,10 +25,18 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
+  void connectToMidiDevice(MidiDevice device) {
+    _midiCommand.connectToDevice(device);
+  }
+
+  void disconnectMidiDevice(MidiDevice device) {
+    _midiCommand.disconnectDevice(device);
+  }
+
   void _refreshListOfMidiDevices() async {
     await _informUserAboutBluetoothPermissions(context);
     if (_midiCommand.bluetoothState == BluetoothState.poweredOn) {
-      _midiCommand.startScanningForBluetoothDevices().catchError((err) {
+      await _midiCommand.startScanningForBluetoothDevices().catchError((err) {
         print("Error $err");
       });
     } else {
@@ -84,7 +92,11 @@ class _HomepageState extends State<Homepage> {
     _availableDevices = _midiCommand.devices;
     _tabs = [
       const MidiController(),
-      Devices(availableDevices: _availableDevices),
+      Devices(
+        availableDevices: _availableDevices,
+        disconnectDevice: disconnectMidiDevice,
+        connectToDevice: connectToMidiDevice,
+      ),
       Settings(),
     ];
   }
