@@ -50,7 +50,8 @@ class Devices extends StatelessWidget {
                   style: Theme.of(context).textTheme.headline6,
                 ),
                 subtitle: Text(
-                    'ins:${devices.elementAt(index).inputPorts.length} outs:${devices.elementAt(index).outputPorts.length}'),
+                    'Input ports: ${devices.elementAt(index).inputPorts.length}\nOutput ports: ${devices.elementAt(index).outputPorts.length}'),
+                isThreeLine: true,
                 leading: Icon(devices.elementAt(index).connected
                     ? Icons.radio_button_on
                     : Icons.radio_button_off),

@@ -14,8 +14,6 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   final MidiCommand _midiCommand = MidiCommand();
-  late Future<List<MidiDevice>?> _availableDevices;
-  late List<Widget> _tabs;
   int _currentTabIndex = 0;
   bool _didAskForBluetoothPermission = false;
 
@@ -25,12 +23,14 @@ class _HomepageState extends State<Homepage> {
     });
   }
 
-  void connectToMidiDevice(MidiDevice device) {
-    _midiCommand.connectToDevice(device);
+  Future<void> connectToMidiDevice(MidiDevice device) async {
+    await _midiCommand.connectToDevice(device);
+    setState(() {});
   }
 
   void disconnectMidiDevice(MidiDevice device) {
     _midiCommand.disconnectDevice(device);
+    setState(() {});
   }
 
   void _refreshListOfMidiDevices() async {
@@ -43,9 +43,7 @@ class _HomepageState extends State<Homepage> {
       await _midiCommand.startBluetoothCentral();
       await _midiCommand.waitUntilBluetoothIsInitialized();
     }
-    setState(() {
-      _availableDevices = _midiCommand.devices;
-    });
+    setState(() {});
   }
 
   Future<void> _informUserAboutBluetoothPermissions(
@@ -71,7 +69,9 @@ class _HomepageState extends State<Homepage> {
               ],
             );
           });
-      _didAskForBluetoothPermission = true;
+      setState(() {
+        _didAskForBluetoothPermission = true;
+      });
       return;
     }
   }
@@ -86,19 +86,20 @@ class _HomepageState extends State<Homepage> {
     }
   }
 
-  @override
-  void initState() {
-    super.initState();
-    _availableDevices = _midiCommand.devices;
-    _tabs = [
-      const MidiController(),
-      Devices(
-        availableDevices: _availableDevices,
+  Widget renderTab() {
+    Widget widgetToRender;
+    if (_currentTabIndex == 0) {
+      widgetToRender = const MidiController();
+    } else if (_currentTabIndex == 1) {
+      widgetToRender = Devices(
+        availableDevices: _midiCommand.devices,
         disconnectDevice: disconnectMidiDevice,
         connectToDevice: connectToMidiDevice,
-      ),
-      Settings(),
-    ];
+      );
+    } else {
+      widgetToRender = Settings();
+    }
+    return widgetToRender;
   }
 
   @override
@@ -120,7 +121,7 @@ class _HomepageState extends State<Homepage> {
               ]
             : [],
       ),
-      body: _tabs.elementAt(_currentTabIndex),
+      body: renderTab(),
       bottomNavigationBar: BottomNavBar(
         updateView: _changeTabView,
       ),
