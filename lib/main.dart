@@ -17,7 +17,7 @@ class MyApp extends StatelessWidget {
           primarySwatch: Colors.amber,
           primaryColorDark: Colors.purple,
         ),
-        textTheme: GoogleFonts.firaCodeTextTheme(),
+        textTheme: GoogleFonts.robotoTextTheme(),
         bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           type: BottomNavigationBarType.fixed,
           showUnselectedLabels: false,

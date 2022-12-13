@@ -108,10 +108,6 @@ class _HomepageState extends State<Homepage> {
       appBar: AppBar(
         title: _updateAppBarTitle(),
         centerTitle: false,
-        leading: const FlutterLogo(
-          style: FlutterLogoStyle.markOnly,
-          curve: Curves.easeIn,
-        ),
         actions: _currentTabIndex == 1
             ? [
                 IconButton(
