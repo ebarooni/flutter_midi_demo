@@ -5,11 +5,13 @@ class Devices extends StatelessWidget {
   final Future<List<MidiDevice>?> availableDevices;
   final Function(MidiDevice) disconnectDevice;
   final Function(MidiDevice) connectToDevice;
+  final Function refreshDeviceList;
 
   const Devices({
     required this.availableDevices,
     required this.disconnectDevice,
     required this.connectToDevice,
+    required this.refreshDeviceList,
     Key? key,
   }) : super(key: key);
 
@@ -42,27 +44,30 @@ class Devices extends StatelessWidget {
         Widget children;
         if (snapshot.hasData && snapshot.data != null) {
           var devices = (snapshot.data as List<MidiDevice>);
-          children = ListView.separated(
-            itemBuilder: ((context, index) {
-              return ListTile(
-                title: Text(
-                  devices.elementAt(index).name,
-                  style: Theme.of(context).textTheme.headline6,
-                ),
-                subtitle: Text(
-                    'Input ports: ${devices.elementAt(index).inputPorts.length}\nOutput ports: ${devices.elementAt(index).outputPorts.length}'),
-                isThreeLine: true,
-                leading: Icon(devices.elementAt(index).connected
-                    ? Icons.radio_button_on
-                    : Icons.radio_button_off),
-                trailing:
-                    Icon(_deviceIconForType(devices.elementAt(index).type)),
-                onTap: () =>
-                    connectOrDisconnectDevice(devices.elementAt(index)),
-              );
-            }),
-            separatorBuilder: (context, index) => const Divider(),
-            itemCount: devices.length,
+          children = RefreshIndicator(
+            onRefresh: () => refreshDeviceList(),
+            child: ListView.separated(
+              itemBuilder: ((context, index) {
+                return ListTile(
+                  title: Text(
+                    devices.elementAt(index).name,
+                    style: Theme.of(context).textTheme.headline6,
+                  ),
+                  subtitle: Text(
+                      'Input ports: ${devices.elementAt(index).inputPorts.length}\nOutput ports: ${devices.elementAt(index).outputPorts.length}'),
+                  isThreeLine: true,
+                  leading: Icon(devices.elementAt(index).connected
+                      ? Icons.radio_button_on
+                      : Icons.radio_button_off),
+                  trailing:
+                      Icon(_deviceIconForType(devices.elementAt(index).type)),
+                  onTap: () =>
+                      connectOrDisconnectDevice(devices.elementAt(index)),
+                );
+              }),
+              separatorBuilder: (context, index) => const Divider(),
+              itemCount: devices.length,
+            ),
           );
         } else {
           children = const Center(child: CircularProgressIndicator());

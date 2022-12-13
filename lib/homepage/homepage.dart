@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import '../devices/devices.dart';
 import '../settings/settings.dart';
@@ -14,8 +15,32 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   final MidiCommand _midiCommand = MidiCommand();
+  late StreamSubscription<String>? _setupSubscription;
+  late StreamSubscription<BluetoothState> _bluetoothStateSubscription;
   int _currentTabIndex = 0;
   bool _didAskForBluetoothPermission = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _setupSubscription = _midiCommand.onMidiSetupChanged?.listen((data) async {
+      print("setup changed $data");
+      setState(() {});
+    });
+
+    _bluetoothStateSubscription = _midiCommand.onBluetoothStateChanged.listen((data) {
+      print("bluetooth state change $data");
+      setState(() {});
+    });
+  }
+
+  @override
+  void dispose() {
+    _setupSubscription?.cancel();
+    _bluetoothStateSubscription.cancel();
+    super.dispose();
+  }
 
   void _changeTabView(int changedTabIndex) {
     setState(() {
@@ -25,11 +50,13 @@ class _HomepageState extends State<Homepage> {
 
   Future<void> connectToMidiDevice(MidiDevice device) async {
     await _midiCommand.connectToDevice(device);
+    _midiCommand.stopScanningForBluetoothDevices();
     setState(() {});
   }
 
   void disconnectMidiDevice(MidiDevice device) {
     _midiCommand.disconnectDevice(device);
+    _refreshListOfMidiDevices();
     setState(() {});
   }
 
@@ -95,6 +122,7 @@ class _HomepageState extends State<Homepage> {
         availableDevices: _midiCommand.devices,
         disconnectDevice: disconnectMidiDevice,
         connectToDevice: connectToMidiDevice,
+        refreshDeviceList: _refreshListOfMidiDevices,
       );
     } else {
       widgetToRender = Settings();
