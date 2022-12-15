@@ -29,7 +29,8 @@ class _HomepageState extends State<Homepage> {
       setState(() {});
     });
 
-    _bluetoothStateSubscription = _midiCommand.onBluetoothStateChanged.listen((data) {
+    _bluetoothStateSubscription =
+        _midiCommand.onBluetoothStateChanged.listen((data) {
       print("bluetooth state change $data");
       setState(() {});
     });
@@ -71,6 +72,23 @@ class _HomepageState extends State<Homepage> {
       await _midiCommand.waitUntilBluetoothIsInitialized();
     }
     setState(() {});
+  }
+
+  List<Widget> _updateAppBarIcon() {
+    if (_currentTabIndex == 0) {
+      return [
+        IconButton(onPressed: () {}, icon: const Icon(Icons.delete_outline))
+      ];
+    } else if (_currentTabIndex == 1) {
+      return [
+        IconButton(
+          onPressed: () => _refreshListOfMidiDevices(),
+          icon: const Icon(Icons.refresh),
+        )
+      ];
+    } else {
+      return [];
+    }
   }
 
   Future<void> _informUserAboutBluetoothPermissions(
@@ -116,7 +134,10 @@ class _HomepageState extends State<Homepage> {
   Widget renderTab() {
     Widget widgetToRender;
     if (_currentTabIndex == 0) {
-      widgetToRender = const MidiController();
+      widgetToRender = MidiController(
+        midiDataStream: _midiCommand.onMidiDataReceived,
+        openDevicesTab: _changeTabView,
+      );
     } else if (_currentTabIndex == 1) {
       widgetToRender = Devices(
         availableDevices: _midiCommand.devices,
@@ -136,14 +157,7 @@ class _HomepageState extends State<Homepage> {
       appBar: AppBar(
         title: _updateAppBarTitle(),
         centerTitle: false,
-        actions: _currentTabIndex == 1
-            ? [
-                IconButton(
-                  onPressed: () => _refreshListOfMidiDevices(),
-                  icon: const Icon(Icons.refresh),
-                )
-              ]
-            : [],
+        actions: _updateAppBarIcon(),
       ),
       body: renderTab(),
       bottomNavigationBar: BottomNavBar(
