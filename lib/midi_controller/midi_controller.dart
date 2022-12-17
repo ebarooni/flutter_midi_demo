@@ -56,15 +56,30 @@ class _MidiControllerState extends State<MidiController> {
               ),
             ),
           )
-        : ListView.separated(
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text(packetList.elementAt(index).data.toString()),
-              );
-            },
-            separatorBuilder: (context, index) => const Divider(),
-            itemCount: packetList.length,
-            reverse: true,
+        : Column(
+            children: [
+              ListTile(
+                iconColor: Colors.red,
+                leading: const Icon(Icons.delete),
+                title: const Text('Tap to empty the messages stream'),
+                onTap: () => packetList.clear(),
+                tileColor: const Color.fromARGB(255, 247, 245, 245),
+              ),
+              const Divider(
+                height: 1,
+              ),
+              ListView.separated(
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    title: Text(packetList.elementAt(index).data.toString()),
+                  );
+                },
+                separatorBuilder: (context, index) => const Divider(),
+                itemCount: packetList.length,
+                shrinkWrap: true,
+                reverse: true,
+              ),
+            ],
           );
   }
 }
