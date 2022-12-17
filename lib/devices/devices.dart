@@ -42,7 +42,9 @@ class Devices extends StatelessWidget {
       future: availableDevices,
       builder: (context, snapshot) {
         Widget children;
-        if (snapshot.hasData && snapshot.data != null && (snapshot.data as List<MidiDevice>).isNotEmpty) {
+        if (snapshot.hasData &&
+            snapshot.data != null &&
+            (snapshot.data as List<MidiDevice>).isNotEmpty) {
           var devices = (snapshot.data as List<MidiDevice>);
           children = RefreshIndicator(
             onRefresh: () => refreshDeviceList(),

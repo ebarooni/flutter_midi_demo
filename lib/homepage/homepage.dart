@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import './device_connection_indicator/device_connection_indicator.dart';
 import '../devices/devices.dart';
 import '../settings/settings.dart';
 import '../midi_controller/midi_controller.dart';
@@ -77,7 +78,7 @@ class _HomepageState extends State<Homepage> {
   List<Widget> _updateAppBarIcon() {
     if (_currentTabIndex == 0) {
       return [
-        IconButton(onPressed: () {}, icon: const Icon(Icons.delete_outline))
+        DeviceConnectionIndicator(devices: _midiCommand.devices)
       ];
     } else if (_currentTabIndex == 1) {
       return [
