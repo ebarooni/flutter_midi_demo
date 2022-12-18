@@ -43,17 +43,23 @@ class _MidiControllerState extends State<MidiController> {
   @override
   Widget build(BuildContext context) {
     return packetList.isEmpty
-        ? Center(
-            child: ElevatedButton.icon(
-              onPressed: () => widget.openDevicesTab(1),
-              icon: const Icon(
-                Icons.add,
-                size: 40,
+        ? Card(
+            semanticContainer: true,
+            elevation: 4,
+            child: ListTile(
+              contentPadding: const EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 12,
               ),
-              label: Text(
-                'Connect to a device',
-                style: Theme.of(context).textTheme.headline6,
+              leading: const CircularProgressIndicator(),
+              isThreeLine: true,
+              title: Text(
+                'Waiting for MIDI events',
+                style: Theme.of(context).textTheme.headlineSmall,
               ),
+              subtitle: const Text(
+                  'Connect to a MIDI device if top right corner shows no devices are connected'),
             ),
           )
         : Column(
