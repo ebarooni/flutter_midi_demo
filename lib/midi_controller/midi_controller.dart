@@ -29,7 +29,9 @@ class _MidiControllerState extends State<MidiController> {
         if (packetList.length > 30) {
           packetList.removeLast();
         }
-        packetList.insert(0, packet);
+        if ((packet.data.elementAt(0) > 127 && packet.data.elementAt(0) < 160) || packet.data.elementAt(0) == 176) {
+          packetList.insert(0, packet);
+        }
       });
     });
   }
@@ -38,6 +40,16 @@ class _MidiControllerState extends State<MidiController> {
   void dispose() {
     _midiEventSubscription?.cancel();
     super.dispose();
+  }
+
+  Widget selectIcon(int eventType) {
+    if (eventType < 144 && eventType > 127) {
+      return const Icon(Icons.music_off_rounded);
+    } else if (eventType < 160 && eventType > 143) {
+      return const Icon(Icons.music_note_rounded);
+    } else {
+      return const Icon(Icons.question_mark_rounded);
+    }
   }
 
   @override
@@ -68,22 +80,32 @@ class _MidiControllerState extends State<MidiController> {
                 iconColor: Colors.red,
                 leading: const Icon(Icons.delete),
                 title: const Text('Tap to empty the messages stream'),
-                onTap: () => packetList.clear(),
+                onTap: () {
+                  setState(() {
+                    packetList.clear();
+                  });
+                },
                 tileColor: const Color.fromARGB(255, 247, 245, 245),
               ),
               const Divider(
                 height: 1,
               ),
-              ListView.separated(
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    title: Text(packetList.elementAt(index).data.toString()),
-                  );
-                },
-                separatorBuilder: (context, index) => const Divider(),
-                itemCount: packetList.length,
-                shrinkWrap: true,
-                reverse: true,
+              Expanded(
+                child: ListView.separated(
+                  itemBuilder: (context, index) {
+                    var midiEvent = packetList.elementAt(index);
+                    return ListTile(
+                      leading: selectIcon(midiEvent.data.elementAt(0)),
+                      title: Text(midiEvent.data.elementAt(1).toString()),
+                      subtitle: Text(midiEvent.data.elementAt(2).toString()),
+                      trailing: Text(midiEvent.device.name),
+                    );
+                  },
+                  scrollDirection: Axis.vertical,
+                  separatorBuilder: (context, index) => const Divider(),
+                  itemCount: packetList.length,
+                  shrinkWrap: true,
+                ),
               ),
             ],
           );
