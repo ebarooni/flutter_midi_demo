@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_midi_command/flutter_midi_command.dart';
+import './event_details/event_details.dart';
 
 class MidiController extends StatefulWidget {
   const MidiController({
@@ -29,7 +30,9 @@ class _MidiControllerState extends State<MidiController> {
         if (packetList.length > 30) {
           packetList.removeLast();
         }
-        if ((packet.data.elementAt(0) > 127 && packet.data.elementAt(0) < 160) || packet.data.elementAt(0) == 176) {
+        if ((packet.data.elementAt(0) > 127 &&
+                packet.data.elementAt(0) < 160) ||
+            packet.data.elementAt(0) == 176) {
           packetList.insert(0, packet);
         }
       });
@@ -96,9 +99,17 @@ class _MidiControllerState extends State<MidiController> {
                     var midiEvent = packetList.elementAt(index);
                     return ListTile(
                       leading: selectIcon(midiEvent.data.elementAt(0)),
-                      title: Text(midiEvent.data.elementAt(1).toString()),
-                      subtitle: Text(midiEvent.data.elementAt(2).toString()),
+                      title: Text(midiEvent.data.toString()),
                       trailing: Text(midiEvent.device.name),
+                      onTap: () => Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => EventDetails(
+                            source: midiEvent.device,
+                            timestamp: midiEvent.timestamp,
+                            data: midiEvent.data,
+                          ),
+                        ),
+                      ),
                     );
                   },
                   scrollDirection: Axis.vertical,

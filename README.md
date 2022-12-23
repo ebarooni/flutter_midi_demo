@@ -1,6 +1,6 @@
 # flutter_midi_demo
 
-A new Flutter project.
+Connect to your BLE MIDI device and inspect the MIDI events.
 
 ## Getting Started
 
