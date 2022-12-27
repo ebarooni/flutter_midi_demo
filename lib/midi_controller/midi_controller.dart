@@ -82,7 +82,7 @@ class _MidiControllerState extends State<MidiController> {
               ListTile(
                 iconColor: Colors.red,
                 leading: const Icon(Icons.delete),
-                title: const Text('Tap to empty the messages stream'),
+                title: const Text('Tap to clear the events list'),
                 onTap: () {
                   setState(() {
                     packetList.clear();
